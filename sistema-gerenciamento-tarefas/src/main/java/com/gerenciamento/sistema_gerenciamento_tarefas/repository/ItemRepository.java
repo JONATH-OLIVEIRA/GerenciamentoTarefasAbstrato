@@ -1,13 +1,16 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.repository;
 
-import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Prioridade;
+import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByListaId(Long listaId);
-    List<Item> findByEstado(String estado);
-    List<Item> findByPrioridade(Integer prioridade);
-    List<Item> findByEstadoAndPrioridade(String estado, Integer prioridade);
+    List<Item> findByEstado(Estado estado); // Correção aqui
+    List<Item> findByPrioridade(Prioridade prioridade); // Correção aqui
+    List<Item> findByEstadoAndPrioridade(Estado estado, Prioridade prioridade);
 }

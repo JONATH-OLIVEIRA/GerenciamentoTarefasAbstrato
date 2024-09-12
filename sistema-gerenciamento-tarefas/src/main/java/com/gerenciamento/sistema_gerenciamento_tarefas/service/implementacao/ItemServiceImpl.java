@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Prioridade;
 import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
 import com.gerenciamento.sistema_gerenciamento_tarefas.repository.ItemRepository;
 import com.gerenciamento.sistema_gerenciamento_tarefas.service.ItemService;
@@ -39,7 +41,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findAll(String estado, Integer prioridade) {
+    public List<Item> findAll(Estado estado, Prioridade prioridade) {
         if (estado != null && prioridade != null) {
             return itemRepository.findByEstadoAndPrioridade(estado, prioridade);
         } else if (estado != null) {
@@ -47,7 +49,9 @@ public class ItemServiceImpl implements ItemService {
         } else if (prioridade != null) {
             return itemRepository.findByPrioridade(prioridade);
         } else {
-            return itemRepository.findAll();
+            return itemRepository.findAll(); // Retorna todos os itens se nenhum filtro é aplicado
         }
+    
     }
+
 }	

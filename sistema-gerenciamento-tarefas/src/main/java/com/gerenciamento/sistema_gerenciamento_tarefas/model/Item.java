@@ -1,22 +1,32 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.model;
 
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Prioridade;
+
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity(name = "tb_item")
-public class Item {
+public class Item implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String descricao;
-    private String estado; // Ex: "Pendente", "Concluído"
-    private Integer prioridade; // Nível de prioridade
+
+    @Enumerated(EnumType.STRING)
+    private Estado estado;
+
+    @Enumerated(EnumType.STRING)
+    private Prioridade prioridade;
 
     @ManyToOne
     @JsonIgnore
@@ -25,7 +35,7 @@ public class Item {
     // Construtores
     public Item() {}
 
-    public Item(String descricao, String estado, Integer prioridade, Lista lista) {
+    public Item(String descricao, Estado estado, Prioridade prioridade, Lista lista) {
         this.descricao = descricao;
         this.estado = estado;
         this.prioridade = prioridade;
@@ -49,19 +59,19 @@ public class Item {
         this.descricao = descricao;
     }
 
-    public String getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
-    public Integer getPrioridade() {
+    public Prioridade getPrioridade() {
         return prioridade;
     }
 
-    public void setPrioridade(Integer prioridade) {
+    public void setPrioridade(Prioridade prioridade) {
         this.prioridade = prioridade;
     }
 

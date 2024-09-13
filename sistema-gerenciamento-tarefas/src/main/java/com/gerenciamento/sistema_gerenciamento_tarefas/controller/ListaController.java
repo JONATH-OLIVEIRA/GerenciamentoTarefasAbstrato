@@ -52,10 +52,10 @@ public class ListaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Lista> createLista(@RequestBody Lista lista) {
-		Lista novaLista = new Lista(lista.getTitulo());
-		Lista listaSalva = listaService.create(novaLista);
-		return ResponseEntity.status(HttpStatus.CREATED).body(listaSalva);
+	public ResponseEntity<Lista> createLista(@Valid @RequestBody Lista lista) {
+	    Lista novaLista = new Lista(lista.getTitulo());
+	    Lista listaSalva = listaService.create(novaLista);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(listaSalva);
 	}
 
 	@PutMapping("/{id}")

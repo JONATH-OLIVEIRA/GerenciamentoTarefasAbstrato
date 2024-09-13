@@ -24,6 +24,8 @@ public class ListaServiceImpl implements ListaService {
     public Lista findById(Long id) {
         return listaRepository.findById(id).orElse(null);
     }
+    
+    
 
     @Override
     public Lista create(Lista listaToCreate) {

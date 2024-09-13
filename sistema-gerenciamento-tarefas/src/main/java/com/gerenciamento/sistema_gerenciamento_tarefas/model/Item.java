@@ -1,6 +1,7 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
@@ -13,24 +14,26 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "tb_item")
 public class Item implements Serializable {
 
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "A descrição não pode estar vazia.")
     private String descricao;
 
+    @NotNull(message = "O estado não pode ser nulo.")
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
+    @NotNull(message = "A prioridade não pode ser nula.")
     @Enumerated(EnumType.STRING)
     private Prioridade prioridade;
 
@@ -88,4 +91,29 @@ public class Item implements Serializable {
     public void setLista(Lista lista) {
         this.lista = lista;
     }
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", descricao=" + descricao + ", estado=" + estado + ", prioridade=" + prioridade
+				+ ", lista=" + lista + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Item other = (Item) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	    
 }

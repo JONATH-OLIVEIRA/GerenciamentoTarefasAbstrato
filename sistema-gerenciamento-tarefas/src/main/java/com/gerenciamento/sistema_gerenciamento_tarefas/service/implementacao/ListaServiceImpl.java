@@ -1,14 +1,15 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.service.implementacao;
 
-import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
-import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
-import com.gerenciamento.sistema_gerenciamento_tarefas.repository.ListaRepository;
-import com.gerenciamento.sistema_gerenciamento_tarefas.repository.ItemRepository;
-import com.gerenciamento.sistema_gerenciamento_tarefas.service.ListaService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
+import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
+import com.gerenciamento.sistema_gerenciamento_tarefas.repository.ItemRepository;
+import com.gerenciamento.sistema_gerenciamento_tarefas.repository.ListaRepository;
+import com.gerenciamento.sistema_gerenciamento_tarefas.service.ListaService;
 
 @Service
 public class ListaServiceImpl implements ListaService {
@@ -46,7 +47,7 @@ public class ListaServiceImpl implements ListaService {
     public List<Item> getItemsByListaId(Long listaId) {
         return itemRepository.findByListaId(listaId);
     }
-    
+
     @Override
     public List<Lista> findAll() {
         return listaRepository.findAll();  // Busca todas as listas

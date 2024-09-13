@@ -1,9 +1,9 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.service;
 
-import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
-import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
-
 import java.util.List;
+
+import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
+import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
 
 public interface ListaService {
     Lista findById(Long id);

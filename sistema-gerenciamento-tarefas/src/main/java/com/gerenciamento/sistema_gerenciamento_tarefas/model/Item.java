@@ -1,18 +1,24 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.model;
 
-import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
-import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Prioridade;
-
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
+import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Prioridade;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity(name = "tb_item")
 public class Item implements Serializable {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

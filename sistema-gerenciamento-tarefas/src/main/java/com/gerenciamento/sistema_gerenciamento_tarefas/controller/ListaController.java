@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -114,5 +115,15 @@ public class ListaController {
 
 	        List<Item> itens = itemService.findAll(estado, prioridade);
 	        return ResponseEntity.ok(itens);
+	    }
+	 @PatchMapping("/{id}/estado")
+	    public ResponseEntity<Item> updateItemEstado(
+	            @PathVariable Long id,
+	            @RequestParam Estado novoEstado) {
+	        Item item = itemService.updateItemEstado(id, novoEstado);
+	        if (item != null) {
+	            return ResponseEntity.ok(item);
+	        }
+	        return ResponseEntity.notFound().build();
 	    }
 }

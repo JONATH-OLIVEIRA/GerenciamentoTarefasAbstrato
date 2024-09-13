@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gerenciamento.sistema_gerenciamento_tarefas.globalExceptionHandler.exceptions.ListaExistenteException;
 import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
 import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
 import com.gerenciamento.sistema_gerenciamento_tarefas.repository.ItemRepository;
@@ -25,10 +26,11 @@ public class ListaServiceImpl implements ListaService {
         return listaRepository.findById(id).orElse(null);
     }
     
-    
-
     @Override
     public Lista create(Lista listaToCreate) {
+        if (existsByTitulo(listaToCreate.getTitulo())) {
+            throw new ListaExistenteException("Já existe uma lista com o título: " + listaToCreate.getTitulo());
+        }
         return listaRepository.save(listaToCreate);
     }
 
@@ -53,5 +55,10 @@ public class ListaServiceImpl implements ListaService {
     @Override
     public List<Lista> findAll() {
         return listaRepository.findAll();  // Busca todas as listas
+    }
+
+    @Override
+    public boolean existsByTitulo(String titulo) {
+        return listaRepository.findByTitulo(titulo).isPresent();
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.gerenciamento.sistema_gerenciamento_tarefas.globalExceptionHandler.exceptions.ListaExistenteException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -28,5 +30,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(ListaExistenteException.class)
+    public ResponseEntity<String> handleListaExistenteException(ListaExistenteException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }

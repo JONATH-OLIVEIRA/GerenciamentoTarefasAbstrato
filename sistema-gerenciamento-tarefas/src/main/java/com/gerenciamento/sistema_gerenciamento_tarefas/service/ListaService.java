@@ -12,6 +12,7 @@ public interface ListaService {
     void delete(Long id);
     List<Item> getItemsByListaId(Long listaId);
     List<Lista> findAll();
+    boolean existsByTitulo(String titulo);
 }
 
 

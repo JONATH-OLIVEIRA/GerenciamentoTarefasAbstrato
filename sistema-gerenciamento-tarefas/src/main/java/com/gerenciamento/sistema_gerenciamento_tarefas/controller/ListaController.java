@@ -35,22 +35,44 @@ public class ListaController {
     @Autowired
     private ItemService itemService;
 
-    // Busca todas as listas
+    // Busca todas as listas ou itens com filtros por ID de lista, estado ou prioridade
     @GetMapping
-    public ResponseEntity<List<Lista>> getAllListas() {
+    public ResponseEntity<?> getListasOuItens(
+            @RequestParam(required = false) Long listaId,
+            @RequestParam(required = false) Estado estado,
+            @RequestParam(required = false) Prioridade prioridade) {
+
+        // Se listaId for informado, busca os itens da lista e aplica os filtros de estado e prioridade
+        if (listaId != null) {
+            Lista lista = listaService.findById(listaId);
+            if (lista == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lista não encontrada.");
+            }
+            
+            // Filtra os itens da lista
+            List<Item> itensFiltrados = lista.getItens();
+            if (estado != null) {
+                itensFiltrados = itensFiltrados.stream()
+                        .filter(item -> item.getEstado().equals(estado))
+                        .toList();
+            }
+            if (prioridade != null) {
+                itensFiltrados = itensFiltrados.stream()
+                        .filter(item -> item.getPrioridade().equals(prioridade))
+                        .toList();
+            }
+            return ResponseEntity.ok(itensFiltrados);
+        }
+
+        // Se listaId não for informado, busca todos os itens filtrados por estado e prioridade
+        if (estado != null || prioridade != null) {
+            List<Item> itens = itemService.findAll(estado, prioridade);
+            return ResponseEntity.ok(itens);
+        }
+
+        // Se nenhum parâmetro for informado, retorna todas as listas
         List<Lista> listas = listaService.findAll();
         return ResponseEntity.ok(listas);
-    }
-
-    // Busca uma lista por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Lista> getListaById(@PathVariable Long id) {
-        Lista lista = listaService.findById(id);
-        if (lista != null) {
-            return ResponseEntity.ok(lista);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 
     // Criação de uma nova lista
@@ -65,20 +87,8 @@ public class ListaController {
     public ResponseEntity<Lista> updateLista(@PathVariable Long id, @Valid @RequestBody Lista lista) {
         lista.setId(id);
         Lista updatedLista = listaService.update(lista);
-        if (updatedLista != null) {
-            return ResponseEntity.ok(updatedLista);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-    
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<Item> updateItemEstado(@PathVariable Long id, @RequestParam Estado novoEstado) {
-        Item item = itemService.updateItemEstado(id, novoEstado);
-        if (item != null) {
-            return ResponseEntity.ok(item);
-        }
-        return ResponseEntity.notFound().build();
+        return updatedLista != null ? ResponseEntity.ok(updatedLista) 
+                                    : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     // Exclusão de uma lista por ID
@@ -104,13 +114,8 @@ public class ListaController {
     @PutMapping("/itens/{itemId}")
     public ResponseEntity<Item> updateItem(@PathVariable Long itemId, @Valid @RequestBody Item item) {
         Item existingItem = itemService.findById(itemId);
-        if (existingItem != null) {
-            item.setId(itemId);
-            Item updatedItem = itemService.update(item);
-            return ResponseEntity.ok(updatedItem);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return existingItem != null ? ResponseEntity.ok(itemService.update(item))
+                                    : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     // Exclusão de um item específico por ID
@@ -120,46 +125,11 @@ public class ListaController {
         return ResponseEntity.noContent().build();
     }
 
-    // Busca itens ou listas com filtros por ID de lista, estado ou prioridade
-    @GetMapping("/itens")
-    public ResponseEntity<?> getItens(
-            @RequestParam(required = false) Long listaId,
-            @RequestParam(required = false) Estado estado,
-            @RequestParam(required = false) Prioridade prioridade) {
-
-        // Se listaId for informado, busca os itens da lista e aplica os filtros de estado e prioridade
-        if (listaId != null) {
-            Lista lista = listaService.findById(listaId);
-            if (lista != null) {
-                List<Item> itensFiltrados = lista.getItens(); // Pega os itens da lista
-
-                // Aplica os filtros de estado e prioridade se forem fornecidos
-                if (estado != null) {
-                    itensFiltrados = itensFiltrados.stream()
-                        .filter(item -> item.getEstado().equals(estado))
-                        .toList();
-                }
-                if (prioridade != null) {
-                    itensFiltrados = itensFiltrados.stream()
-                        .filter(item -> item.getPrioridade().equals(prioridade))
-                        .toList();
-                }
-
-                return ResponseEntity.ok(itensFiltrados);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lista não encontrada.");
-            }
-        }
-
-        // Se listaId não for informado, aplica os filtros gerais de estado e prioridade
-        List<Item> itens;
-        if (estado != null || prioridade != null) {
-            itens = itemService.findAll(estado, prioridade);
-            return ResponseEntity.ok(itens);
-        }
-
-        // Se nenhum parâmetro for informado, retorna todas as listas
-        List<Lista> listas = listaService.findAll();
-        return ResponseEntity.ok(listas);
+    // Atualização do estado de um item
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Item> updateItemEstado(@PathVariable Long id, @RequestParam Estado novoEstado) {
+        Item item = itemService.updateItemEstado(id, novoEstado);
+        return item != null ? ResponseEntity.ok(item) : ResponseEntity.notFound().build();
     }
 }
+

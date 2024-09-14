@@ -22,7 +22,8 @@ import jakarta.validation.constraints.Size;
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

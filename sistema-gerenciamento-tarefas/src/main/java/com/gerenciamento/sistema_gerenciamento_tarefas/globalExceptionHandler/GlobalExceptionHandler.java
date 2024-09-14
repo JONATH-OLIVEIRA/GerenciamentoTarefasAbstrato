@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
-    
+
     @ExceptionHandler(ListaExistenteException.class)
     public ResponseEntity<String> handleListaExistenteException(ListaExistenteException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());

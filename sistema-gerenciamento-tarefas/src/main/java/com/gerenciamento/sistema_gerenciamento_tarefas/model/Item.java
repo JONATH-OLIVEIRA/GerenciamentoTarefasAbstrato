@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity(name = "tb_item")
 public class Item implements Serializable {
@@ -27,6 +28,7 @@ public class Item implements Serializable {
     private Long id;
 
     @NotBlank(message = "A descrição não pode estar vazia.")
+    @Size(min = 3, max = 100, message = "O título deve ter entre 3 e 100 caracteres.")
     private String descricao;
 
     @NotNull(message = "O estado não pode ser nulo.")

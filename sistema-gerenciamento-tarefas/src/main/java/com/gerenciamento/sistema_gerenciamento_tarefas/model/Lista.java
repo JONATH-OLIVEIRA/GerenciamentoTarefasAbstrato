@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity(name = "tb_list")
@@ -23,7 +22,7 @@ public class Lista implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotBlank(message = "O título não pode estar vazio.")
     @Size(min = 3, max = 100, message = "O título deve ter entre 3 e 100 caracteres.")
     private String titulo;
@@ -77,12 +76,10 @@ public class Lista implements Serializable {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if ((obj == null) || (getClass() != obj.getClass()))
 			return false;
 		Lista other = (Lista) obj;
 		return Objects.equals(id, other.id);
 	}
-    
+
 }

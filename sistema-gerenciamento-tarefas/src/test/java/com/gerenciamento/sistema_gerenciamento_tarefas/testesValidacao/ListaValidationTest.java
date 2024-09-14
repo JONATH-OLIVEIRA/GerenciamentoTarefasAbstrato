@@ -1,14 +1,18 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.testesValidacao;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
 import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
+import com.gerenciamento.sistema_gerenciamento_tarefas.service.ItemService;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -17,6 +21,9 @@ import jakarta.validation.ValidatorFactory;
 
 public class ListaValidationTest {
     private Validator validator;
+    
+    @Autowired
+    private ItemService itemService;
 
     @BeforeEach
     public void setUp() {
@@ -36,13 +43,15 @@ public class ListaValidationTest {
     public void testTituloTamanhoMinimo() {
         Lista lista = new Lista("AB"); // Título muito curto
         Set<ConstraintViolation<Lista>> violations = validator.validate(lista);
-        
+
         // Verifica se há pelo menos uma violação
         assertFalse(violations.isEmpty(), "A lista deve ter violações de validação.");
-        
+
         // Verifica se há uma violação com a mensagem esperada
         assertTrue(violations.stream()
                              .anyMatch(violation -> violation.getMessage().contains("O título deve ter entre 3 e 100 caracteres.")),
                    "A lista deve gerar uma violação para título muito curto.");
     }
+    
+    
 }

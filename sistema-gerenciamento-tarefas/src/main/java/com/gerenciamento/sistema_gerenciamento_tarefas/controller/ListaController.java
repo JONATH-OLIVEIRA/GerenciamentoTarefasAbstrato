@@ -35,12 +35,14 @@ public class ListaController {
     @Autowired
     private ItemService itemService;
 
+    // Busca todas as listas
     @GetMapping
     public ResponseEntity<List<Lista>> getAllListas() {
         List<Lista> listas = listaService.findAll();
         return ResponseEntity.ok(listas);
     }
 
+    // Busca uma lista por ID
     @GetMapping("/{id}")
     public ResponseEntity<Lista> getListaById(@PathVariable Long id) {
         Lista lista = listaService.findById(id);
@@ -51,12 +53,14 @@ public class ListaController {
         }
     }
 
+    // Criação de uma nova lista
     @PostMapping
     public ResponseEntity<Lista> createLista(@Valid @RequestBody Lista lista) {
         Lista novaLista = listaService.create(lista);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaLista);
     }
 
+    // Atualização de uma lista por ID
     @PutMapping("/{id}")
     public ResponseEntity<Lista> updateLista(@PathVariable Long id, @Valid @RequestBody Lista lista) {
         lista.setId(id);
@@ -67,13 +71,24 @@ public class ListaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Item> updateItemEstado(@PathVariable Long id, @RequestParam Estado novoEstado) {
+        Item item = itemService.updateItemEstado(id, novoEstado);
+        if (item != null) {
+            return ResponseEntity.ok(item);
+        }
+        return ResponseEntity.notFound().build();
+    }
 
+    // Exclusão de uma lista por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLista(@PathVariable Long id) {
         listaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    // Adiciona um item a uma lista específica
     @PostMapping("/{listaId}/itens")
     public ResponseEntity<Item> addItemToLista(@PathVariable Long listaId, @Valid @RequestBody Item item) {
         Lista lista = listaService.findById(listaId);
@@ -85,6 +100,7 @@ public class ListaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoItem);
     }
 
+    // Atualização de um item específico por ID
     @PutMapping("/itens/{itemId}")
     public ResponseEntity<Item> updateItem(@PathVariable Long itemId, @Valid @RequestBody Item item) {
         Item existingItem = itemService.findById(itemId);
@@ -97,25 +113,53 @@ public class ListaController {
         }
     }
 
+    // Exclusão de um item específico por ID
     @DeleteMapping("/itens/{itemId}")
     public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
         itemService.delete(itemId);
         return ResponseEntity.noContent().build();
     }
 
+    // Busca itens ou listas com filtros por ID de lista, estado ou prioridade
     @GetMapping("/itens")
-    public ResponseEntity<List<Item>> getAllItens(@RequestParam(required = false) Estado estado,
+    public ResponseEntity<?> getItens(
+            @RequestParam(required = false) Long listaId,
+            @RequestParam(required = false) Estado estado,
             @RequestParam(required = false) Prioridade prioridade) {
-        List<Item> itens = itemService.findAll(estado, prioridade);
-        return ResponseEntity.ok(itens);
-    }
 
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<Item> updateItemEstado(@PathVariable Long id, @RequestParam Estado novoEstado) {
-        Item item = itemService.updateItemEstado(id, novoEstado);
-        if (item != null) {
-            return ResponseEntity.ok(item);
+        // Se listaId for informado, busca os itens da lista e aplica os filtros de estado e prioridade
+        if (listaId != null) {
+            Lista lista = listaService.findById(listaId);
+            if (lista != null) {
+                List<Item> itensFiltrados = lista.getItens(); // Pega os itens da lista
+
+                // Aplica os filtros de estado e prioridade se forem fornecidos
+                if (estado != null) {
+                    itensFiltrados = itensFiltrados.stream()
+                        .filter(item -> item.getEstado().equals(estado))
+                        .toList();
+                }
+                if (prioridade != null) {
+                    itensFiltrados = itensFiltrados.stream()
+                        .filter(item -> item.getPrioridade().equals(prioridade))
+                        .toList();
+                }
+
+                return ResponseEntity.ok(itensFiltrados);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lista não encontrada.");
+            }
         }
-        return ResponseEntity.notFound().build();
+
+        // Se listaId não for informado, aplica os filtros gerais de estado e prioridade
+        List<Item> itens;
+        if (estado != null || prioridade != null) {
+            itens = itemService.findAll(estado, prioridade);
+            return ResponseEntity.ok(itens);
+        }
+
+        // Se nenhum parâmetro for informado, retorna todas as listas
+        List<Lista> listas = listaService.findAll();
+        return ResponseEntity.ok(listas);
     }
 }

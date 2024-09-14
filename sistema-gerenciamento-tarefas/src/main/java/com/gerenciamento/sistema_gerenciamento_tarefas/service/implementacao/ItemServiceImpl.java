@@ -68,4 +68,14 @@ public class ItemServiceImpl implements ItemService {
 		return null;
 	}
 
+	 @Override
+	    public List<Item> findAll() {
+	        return itemRepository.findAll();
+	    }
+	 
+	 public List<Item> findAllByListaId(Long listaId) {
+			// Retorna a lista de itens baseado no ID da lista
+			return itemRepository.findByListaId(listaId);
+		}
+
 }

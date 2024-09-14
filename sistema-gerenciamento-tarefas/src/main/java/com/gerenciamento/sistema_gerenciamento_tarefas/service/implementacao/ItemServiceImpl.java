@@ -1,6 +1,8 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.service.implementacao;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,12 +29,21 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.save(item);
 	}
 
-	@Override
 	public Item update(Item item) {
-		if (itemRepository.existsById(item.getId())) {
-			return itemRepository.save(item);
-		}
-		return null;
+	    // Encontre o item existente no banco de dados
+	    Item existingItem = itemRepository.findById(item.getId())
+	            .orElseThrow();
+
+	    // Atualize as propriedades do item existente
+	    existingItem.setDescricao(item.getDescricao());
+	    existingItem.setEstado(item.getEstado());
+	    existingItem.setPrioridade(item.getPrioridade());
+
+	    // Mantenha a lista associada ao item existente
+	    existingItem.setLista(item.getLista());
+
+	    // Salve o item atualizado
+	    return itemRepository.save(existingItem);
 	}
 
 	@Override

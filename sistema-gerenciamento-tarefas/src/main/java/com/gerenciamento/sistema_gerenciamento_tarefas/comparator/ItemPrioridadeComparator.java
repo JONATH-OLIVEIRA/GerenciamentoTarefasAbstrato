@@ -1,8 +1,9 @@
 package com.gerenciamento.sistema_gerenciamento_tarefas.comparator;
 
 import java.util.Comparator;
-import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
+
 import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Prioridade;
+import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
 
 public class ItemPrioridadeComparator implements Comparator<Item> {
 

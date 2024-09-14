@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.gerenciamento.sistema_gerenciamento_tarefas.comparator.ItemPrioridadeComparator;
 import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
 import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Prioridade;
@@ -23,8 +24,10 @@ import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
 import com.gerenciamento.sistema_gerenciamento_tarefas.service.ItemService;
 import com.gerenciamento.sistema_gerenciamento_tarefas.service.ListaService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Gerenciamento de Listas", description = "Operações relacionadas a gerenciamento de listas e itens")
 @RestController
 @RequestMapping("/api/listas")
 public class ListaController {
@@ -135,9 +138,16 @@ public class ListaController {
 	// Atualização de um item específico por ID
 	@PutMapping("/itens/{itemId}")
 	public ResponseEntity<Item> updateItem(@PathVariable Long itemId, @Valid @RequestBody Item item) {
-		Item existingItem = itemService.findById(itemId);
-		return existingItem != null ? ResponseEntity.ok(itemService.update(item))
-				: ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    Item existingItem = itemService.findById(itemId);
+	    if (existingItem == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
+
+	    // Preserva a lista associada ao item existente
+	    item.setLista(existingItem.getLista());
+
+	    Item updatedItem = itemService.update(item);
+	    return ResponseEntity.ok(updatedItem);
 	}
 
 	// Exclusão de um item específico por ID

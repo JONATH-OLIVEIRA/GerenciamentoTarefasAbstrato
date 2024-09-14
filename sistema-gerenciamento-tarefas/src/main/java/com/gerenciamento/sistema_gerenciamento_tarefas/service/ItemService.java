@@ -14,9 +14,10 @@ public interface ItemService {
     List<Item>findAll(Estado estado, Prioridade prioridade);
     
     List<Item> findAll();
-       
+    
    
-    List<Item>findAllByListaId(Long listaId);
+    List<Item>findByListaId(Long listaId); // Método para buscar itens sem ordenação
+   
     Item updateItemEstado(Long id, Estado novoEstado);
     
 }

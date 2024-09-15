@@ -3,14 +3,21 @@
 Este projeto é uma API RESTful para gerenciamento de tarefas, desenvolvida com Java 17, utilizando Spring Boot, PostgreSQL como banco de dados e Swagger para documentação.
 
 ### Tecnologias Utilizadas
-*Java 17: Linguagem de programação usada no backend.
-Spring Boot: Framework usado para a criação da API.
-PostgreSQL: Banco de dados relacional utilizado para persistência de dados.
-Swagger: Utilizado para documentar a API e facilitar a visualização dos endpoints.
-JUnit 5: Ferramenta para testes unitários.
-Mockito: Framework para mock de dependências nos testes.
-Maven : Gerenciamento de dependencias.
-Configurações de Banco de Dados
+## Java 17: 
+Linguagem de programação usada no backend.
+## Spring Boot:
+Framework usado para a criação da API.
+## PostgreSQL: 
+Banco de dados relacional utilizado para persistência de dados.
+## Swagger:
+Utilizado para documentar a API e facilitar a visualização dos endpoints.
+## JUnit 5: 
+Ferramenta para testes unitários.
+## Mockito:
+Framework para mock de dependências nos testes.
+## Maven :
+Gerenciamento de dependencias.
+## Configurações de Banco de Dados
 Este projeto utiliza o PostgreSQL. Certifique-se de que o banco de dados esteja configurado corretamente. No arquivo application.properties, as configurações de conexão estão definidas como:
 
 

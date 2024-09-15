@@ -54,7 +54,7 @@ public class ListaServiceImpl implements ListaService {
 
     @Override
     public List<Lista> findAll() {
-        return listaRepository.findAll();  // Busca todas as listas
+        return listaRepository.findAll();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ListaServiceImpl implements ListaService {
 
 	@Override
 	public boolean existsById(Long id) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
   }

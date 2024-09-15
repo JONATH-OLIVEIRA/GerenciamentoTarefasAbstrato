@@ -73,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Item> findAll() {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 	

@@ -10,7 +10,7 @@ public interface ItemService {
     Item findById(Long id);
     Item create(Item item);
     Item update(Item item);
-    void delete(Long id); // Adicionado
+    void delete(Long id); 
     List<Item> findAll(Estado estado, Prioridade prioridade);
     List<Item> findAll();
     List<Item> findByListaId(Long listaId);

@@ -61,4 +61,10 @@ public class ListaServiceImpl implements ListaService {
     public boolean existsByTitulo(String titulo) {
         return listaRepository.findByTitulo(titulo).isPresent();
     }
-}
+
+	@Override
+	public boolean existsById(Long id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+  }

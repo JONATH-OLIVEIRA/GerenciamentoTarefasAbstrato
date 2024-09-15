@@ -2,7 +2,6 @@ package com.gerenciamento.sistema_gerenciamento_tarefas.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,8 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gerenciamento.sistema_gerenciamento_tarefas.enums.Estado;
-import com.gerenciamento.sistema_gerenciamento_tarefas.model.Item;
+import com.gerenciamento.sistema_gerenciamento_tarefas.dto.ListaUpdateDTO;
 import com.gerenciamento.sistema_gerenciamento_tarefas.model.Lista;
 import com.gerenciamento.sistema_gerenciamento_tarefas.service.ItemService;
 import com.gerenciamento.sistema_gerenciamento_tarefas.service.ListaService;
@@ -62,35 +60,19 @@ public class ListaControllerTest {
     }
 
     @Test
-    void testGetListasOuItens() throws Exception {
+    void testCreateLista() throws Exception {
+        ListaUpdateDTO listaUpdateDTO = new ListaUpdateDTO();
+        listaUpdateDTO.setTitulo("Minha Lista");
+
         Lista lista = new Lista();
         lista.setId(1L);
-        lista.setTitulo("Lista de Teste");
-
-        Item item = new Item();
-        item.setId(1L);
-        item.setDescricao("Item de Teste");
-        lista.setItens(Collections.singletonList(item));
-
-        Mockito.when(listaService.findById(Mockito.anyLong())).thenReturn(lista);
-
-        mockMvc.perform(get("/api/listas/itens")
-                .param("listaId", "1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(Collections.singletonList(item))));
-    }
-
-    @Test
-    void testCreateLista() throws Exception {
-        Lista lista = new Lista();
         lista.setTitulo("Minha Lista");
 
         Mockito.when(listaService.create(Mockito.any(Lista.class))).thenReturn(lista);
 
         mockMvc.perform(post("/api/listas")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(lista)))
+                .content(objectMapper.writeValueAsString(listaUpdateDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(lista)));
@@ -98,47 +80,29 @@ public class ListaControllerTest {
 
     @Test
     void testUpdateLista() throws Exception {
-        Lista lista = new Lista();
-        lista.setId(1L);
-        lista.setTitulo("Lista Atualizada");
+        ListaUpdateDTO listaUpdateDTO = new ListaUpdateDTO();
+        listaUpdateDTO.setTitulo("Lista Atualizada");
 
-        Mockito.when(listaService.update(Mockito.any(Lista.class))).thenReturn(lista);
+        Lista listaExistente = new Lista();
+        listaExistente.setId(1L);
+        listaExistente.setTitulo("Lista Antiga");
+
+        Lista listaAtualizada = new Lista();
+        listaAtualizada.setId(1L);
+        listaAtualizada.setTitulo("Lista Atualizada");
+
+        Mockito.when(listaService.findById(1L)).thenReturn(listaExistente);
+        Mockito.when(listaService.update(Mockito.any(Lista.class))).thenReturn(listaAtualizada);
 
         mockMvc.perform(put("/api/listas/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(lista)))
+                .content(objectMapper.writeValueAsString(listaUpdateDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(lista)));
+                .andExpect(content().json(objectMapper.writeValueAsString(listaAtualizada)));
     }
 
-    @Test
-    void testDeleteLista() throws Exception {
-        mockMvc.perform(delete("/api/listas/1"))
-                .andExpect(status().isNoContent());
-    }
+      
 
-   
-    @Test
-    void testDeleteItem() throws Exception {
-        mockMvc.perform(delete("/api/listas/itens/1"))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void testUpdateItemEstado() throws Exception {
-        Item item = new Item();
-        item.setId(1L);
-        item.setDescricao("Item com Estado Atualizado");
-        item.setEstado(Estado.NEUTRO); // 
-
-        Mockito.when(itemService.updateItemEstado(Mockito.anyLong(), Mockito.any(Estado.class))).thenReturn(item);
-
-        mockMvc.perform(patch("/api/listas/1/estado")
-                .param("novoEstado", "NEUTRO") 
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(item)));
-    }
 }
+

@@ -23,13 +23,12 @@ public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "A descrição não pode estar vazia.")
-    @Size(min = 3, max = 100, message = "O título deve ter entre 3 e 100 caracteres.")
+    @Size(min = 3, max = 100, message = "A descrição deve ter entre 3 e 100 caracteres.")
     private String descricao;
 
     @NotNull(message = "O estado não pode ser nulo.")
@@ -95,28 +94,23 @@ public class Item implements Serializable {
         this.lista = lista;
     }
 
-	@Override
-	public String toString() {
-		return "Item [id=" + id + ", descricao=" + descricao + ", estado=" + estado + ", prioridade=" + prioridade
-				+ ", lista=" + lista + "]";
-	}
+    @Override
+    public String toString() {
+        return "Item [id=" + id + ", descricao=" + descricao + ", estado=" + estado + ", prioridade=" + prioridade + "]";
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Item other = (Item) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Item other = (Item) obj;
+        return Objects.equals(id, other.id);
+    }
 }

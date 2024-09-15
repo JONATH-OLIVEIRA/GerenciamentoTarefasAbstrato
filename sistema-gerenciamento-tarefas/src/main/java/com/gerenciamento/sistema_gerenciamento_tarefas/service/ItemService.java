@@ -10,14 +10,9 @@ public interface ItemService {
     Item findById(Long id);
     Item create(Item item);
     Item update(Item item);
-    void delete(Long id);
-    List<Item>findAll(Estado estado, Prioridade prioridade);
-    
+    void delete(Long id); // Adicionado
+    List<Item> findAll(Estado estado, Prioridade prioridade);
     List<Item> findAll();
-    
-   
-    List<Item>findByListaId(Long listaId); // Método para buscar itens sem ordenação
-   
+    List<Item> findByListaId(Long listaId);
     Item updateItemEstado(Long id, Estado novoEstado);
-    
 }

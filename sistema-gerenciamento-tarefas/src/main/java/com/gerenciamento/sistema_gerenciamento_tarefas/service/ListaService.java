@@ -13,6 +13,7 @@ public interface ListaService {
     List<Item> getItemsByListaId(Long listaId);
     List<Lista> findAll();
     boolean existsByTitulo(String titulo);
+    boolean existsById(Long id);  // Adicione este método
 }
 
 
